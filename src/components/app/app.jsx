@@ -1,26 +1,103 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-const App = (props) => {
-  const {minutes, mistakes, onClick} = props;
+import ArtistQuestionScreen from '../artist-question-screen/artist-question-screen.jsx';
+import QuestionGenreScreen from '../genre-question-screen/genre-question-screen.jsx';
+import WelcomeScreen from '../welcome-screen/welcome-screen.jsx';
 
-  return <section className="welcome">
-    <div className="welcome__logo"><img src="img/melody-logo.png" alt="Угадай мелодию" width="186" height="83" /></div>
-    <button className="welcome__button" onClick={onClick}><span className="visually-hidden">Начать игру</span></button>
-    <h2 className="welcome__rules-title">Правила игры</h2>
-    <p className="welcome__text">Правила просты:</p>
-    <ul className="welcome__rules-list">
-      <li>За {minutes} минут нужно ответить на все вопросы.</li>
-      <li>Можно допустить {mistakes} ошибки.</li>
-    </ul>
-    <p className="welcome__text">Удачи!</p>
-  </section>;
+const Type = {
+  ARTIST: `game--artist`,
+  GENRE: `game--genre`,
 };
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      question: -1,
+    };
+  }
+
+  _getScreen(question, onClick) {
+    if (!question) {
+      const {
+        mistakes,
+        minutes
+      } = this.props;
+
+      return <WelcomeScreen
+        mistakes={mistakes}
+        minutes={minutes}
+        onClick={onClick}
+      />;
+    }
+
+    switch (question.type) {
+      case `genre`: return <QuestionGenreScreen
+        question={question}
+        onAnswer={onClick}
+      />;
+
+      case `artist`: return <ArtistQuestionScreen
+        question={question}
+        onAnswer={onClick}
+      />;
+    }
+
+    return null;
+  }
+
+  render() {
+    const {questions} = this.props;
+    const {question} = this.state;
+
+    return <section className={`game ${Type.ARTIST}`}>
+      <header className="game__header">
+        <a className="game__back" href="#">
+          <span className="visually-hidden">Сыграть ещё раз</span>
+          <img className="game__logo" src="img/melody-logo-ginger.png" alt="Угадай мелодию" />
+        </a>
+
+        <svg xmlns="http://www.w3.org/2000/svg" className="timer" viewBox="0 0 780 780">
+          <circle className="timer__line" cx="390" cy="390" r="370"
+            style={{
+              filter: `url(#blur)`,
+              transform: `rotate(-90deg) scaleY(-1)`,
+              transformOrigin: `center`
+            }}
+          />
+        </svg>
+
+        <div className="timer__value" xmlns="http://www.w3.org/1999/xhtml">
+          <span className="timer__mins">05</span>
+          <span className="timer__dots">:</span>
+          <span className="timer__secs">00</span>
+        </div>
+
+        <div className="game__mistakes">
+          <div className="wrong"/>
+          <div className="wrong"/>
+          <div className="wrong"/>
+        </div>
+      </header>
+
+      {this._getScreen(questions[question], () => {
+        this.setState({
+          question: question + 1 >= questions.length
+            ? -1
+            : question + 1,
+        });
+      })}
+    </section>;
+  }
+}
+
 
 App.propTypes = {
   minutes: PropTypes.number.isRequired,
   mistakes: PropTypes.number.isRequired,
-  onClick: PropTypes.func
+  questions: PropTypes.array.isRequired
 };
 
 export default App;
