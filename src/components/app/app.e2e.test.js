@@ -4,6 +4,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import App from './app.jsx';
 import mockTestQuestions from '../../mocks/mock-test-questions.js';
+import WelcomeScreen from '../welcome-screen/welcome-screen.jsx';
 
 configure({adapter: new Adapter()});
 
@@ -17,6 +18,7 @@ describe(`App renders correctly`, () => {
     />);
 
     expect(app.state(`question`)).toEqual(-1);
+    expect(app.find(WelcomeScreen)).toHaveLength(1);
   });
 
 
@@ -50,9 +52,7 @@ describe(`App renders correctly`, () => {
     app.update();
 
     const form = app.find(`form`);
-    form.simulate(`submit`, {
-      preventDefault() {},
-    });
+    form.simulate(`submit`);
 
     expect(app.state(`question`)).toEqual(1);
   });
@@ -71,11 +71,10 @@ describe(`App renders correctly`, () => {
     });
     app.update();
 
-    const form = app.find(`form`);
-    form.simulate(`change`, {
-      preventDefault() {}
-    });
+    const input = app.find(`.artist__input`).first();
+    input.simulate(`change`);
 
     expect(app.state(`question`)).toEqual(-1);
+    expect(app.find(WelcomeScreen)).toHaveLength(1);
   });
 });

@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import ArtistQuestionScreen from '../artist-question-screen/artist-question-screen.jsx';
-import QuestionGenreScreen from '../genre-question-screen/genre-question-screen.jsx';
+import GenreQuestionScreen from '../genre-question-screen/genre-question-screen.jsx';
 import WelcomeScreen from '../welcome-screen/welcome-screen.jsx';
 
-const Type = {
-  ARTIST: `game--artist`,
-  GENRE: `game--genre`,
+const QuestionType = {
+  ARTIST: `artist`,
+  GENRE: `genre`
 };
 
 class App extends Component {
@@ -17,6 +17,7 @@ class App extends Component {
     this.state = {
       question: -1,
     };
+    this._handleUpdateState = this._handleUpdateState.bind(this);
   }
 
   _getScreen(question, onClick) {
@@ -34,12 +35,12 @@ class App extends Component {
     }
 
     switch (question.type) {
-      case `genre`: return <QuestionGenreScreen
+      case QuestionType.GENRE: return <GenreQuestionScreen
         question={question}
         onAnswer={onClick}
       />;
 
-      case `artist`: return <ArtistQuestionScreen
+      case QuestionType.ARTIST: return <ArtistQuestionScreen
         question={question}
         onAnswer={onClick}
       />;
@@ -48,11 +49,22 @@ class App extends Component {
     return null;
   }
 
+  _handleUpdateState() {
+    const {questions} = this.props;
+
+    this.setState((prevState) => ({
+      question: prevState.question + 1 >= questions.length
+        ? -1
+        : prevState.question + 1,
+    }));
+  }
+
   render() {
     const {questions} = this.props;
     const {question} = this.state;
+    const classNameType = question.type === QuestionType.ARTIST ? QuestionType.ARTIST : QuestionType.GENRE;
 
-    return <section className={`game ${Type.ARTIST}`}>
+    return <section className={`game game--${classNameType}`}>
       <header className="game__header">
         <a className="game__back" href="#">
           <span className="visually-hidden">Сыграть ещё раз</span>
@@ -82,13 +94,7 @@ class App extends Component {
         </div>
       </header>
 
-      {this._getScreen(questions[question], () => {
-        this.setState({
-          question: question + 1 >= questions.length
-            ? -1
-            : question + 1,
-        });
-      })}
+      {this._getScreen(questions[question], this._handleUpdateState)}
     </section>;
   }
 }
@@ -97,7 +103,10 @@ class App extends Component {
 App.propTypes = {
   minutes: PropTypes.number.isRequired,
   mistakes: PropTypes.number.isRequired,
-  questions: PropTypes.array.isRequired
+  questions: PropTypes.arrayOf(PropTypes.oneOfType([
+    GenreQuestionScreen.propTypes.question,
+    ArtistQuestionScreen.propTypes.question
+  ])).isRequired
 };
 
 export default App;

@@ -2,7 +2,7 @@
 
 exports[`App correctly renders after relaunch 1`] = `
 <section
-  className="game game--artist"
+  className="game game--genre"
 >
   <header
     className="game__header"

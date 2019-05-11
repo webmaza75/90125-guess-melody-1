@@ -14,6 +14,6 @@ it(`WelcomeScreen correctly renders after relaunch`, () => {
   />);
 
   const startButton = welcomeScreen.find(`button`);
-  startButton.simulate(`click`, {preventDefault() {}});
+  startButton.simulate(`click`);
   expect(clickHandler).toHaveBeenCalledTimes(1);
 });
