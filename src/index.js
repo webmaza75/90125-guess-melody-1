@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import App from './components/app/app.jsx';
+import game from './mocks/game';
 
 const init = () => {
   ReactDOM.render(
       <App
-        minutes={5}
-        mistakes={3}
+        {...game}
       />,
       document.querySelector(`.main`)
   );
