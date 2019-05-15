@@ -10,13 +10,23 @@ exports[`ArtistQuestionScreen is rendered correctly 1`] = `
     Кто исполняет эту песню?
   </h2>
   <div
-    className="game__track"
+    className="track"
   >
-    <button
-      className="track__button track__button--play"
-      type="button"
-    />
-    <audio />
+    <div
+      className="game__track"
+    >
+      <button
+        className="track__button track__button--play"
+        disabled={true}
+        onClick={[Function]}
+        type="button"
+      />
+      <div
+        className="track__status"
+      >
+        <audio />
+      </div>
+    </div>
   </div>
   <form
     className="game__artist"

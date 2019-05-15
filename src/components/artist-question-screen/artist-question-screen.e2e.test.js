@@ -5,6 +5,9 @@ import Adapter from 'enzyme-adapter-react-16';
 import ArtistQuestionScreen from './artist-question-screen.jsx';
 import question from '../../mocks/artist-question.js';
 
+window.HTMLMediaElement.prototype.play = () => {};
+window.HTMLMediaElement.prototype.pause = () => {};
+
 configure({adapter: new Adapter()});
 
 describe(`ArtistQuestionScreen renders correctly`, () => {

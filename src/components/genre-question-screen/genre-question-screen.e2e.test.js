@@ -3,6 +3,9 @@ import {configure, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import GenreQuestionScreen from './genre-question-screen.jsx';
 
+window.HTMLMediaElement.prototype.play = () => {};
+window.HTMLMediaElement.prototype.pause = () => {};
+
 configure({adapter: new Adapter()});
 
 const mock = {
@@ -20,9 +23,9 @@ const mock = {
 
 it(`When user answers genre question form is not sent`, () => {
   const {question} = mock;
-  const onAnswer = jest.fn();
+  const onAnswerQuestion = jest.fn();
   const genreQuestion = mount(<GenreQuestionScreen
-    onAnswer={onAnswer}
+    onAnswer={onAnswerQuestion}
     question={question}
   />);
 
@@ -32,6 +35,6 @@ it(`When user answers genre question form is not sent`, () => {
     preventDefault: formSendPrevention,
   });
 
-  expect(onAnswer).toHaveBeenCalledTimes(1);
+  expect(onAnswerQuestion).toHaveBeenCalledTimes(1);
   expect(formSendPrevention).toHaveBeenCalledTimes(1);
 });

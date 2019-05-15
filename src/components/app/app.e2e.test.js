@@ -6,6 +6,9 @@ import App from './app.jsx';
 import mockTestQuestions from '../../mocks/mock-test-questions.js';
 import WelcomeScreen from '../welcome-screen/welcome-screen.jsx';
 
+window.HTMLMediaElement.prototype.play = () => {};
+window.HTMLMediaElement.prototype.pause = () => {};
+
 configure({adapter: new Adapter()});
 
 describe(`App renders correctly`, () => {

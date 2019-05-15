@@ -3,6 +3,9 @@ import renderer from 'react-test-renderer';
 
 import ArtistQuestionScreen from './artist-question-screen.jsx';
 
+window.HTMLMediaElement.prototype.play = () => {};
+window.HTMLMediaElement.prototype.pause = () => {};
+
 const mock = {
   question: {
     type: `artist`,

@@ -1,9 +1,17 @@
 import React, {PureComponent} from "react";
 import PropTypes from "prop-types";
 
+import AudioPlayer from '../audio-player/audio-player.jsx';
+
 const questionType = [`genre`, `artist`];
 
 class ArtistQuestionScreen extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activePlayer: -1
+    };
+  }
 
   _handleChange(event) {
     const {question, onAnswer} = this.props;
@@ -13,14 +21,19 @@ class ArtistQuestionScreen extends PureComponent {
 
   render() {
     const {question} = this.props;
-    const {answers} = question;
+    const {answers, song} = question;
 
     return <section className="game__screen">
       <h2 className="game__title">Кто исполняет эту песню?</h2>
-      <div className="game__track">
-        <button className="track__button track__button--play" type="button" />
-        <audio />
-      </div>
+      {<div className="track">
+        <AudioPlayer
+          src={song.src}
+          isPlaying={this.state.activePlayer !== -1}
+          onPlayButtonClick={() => this.setState({
+            activePlayer: this.state.activePlayer === 0 ? -1 : 0
+          })}
+        />
+      </div>}
 
       <form className="game__artist" onChange={(event) => event.preventDefault()}>
         {answers.map((it, i) => <div className="artist" key={i}>
