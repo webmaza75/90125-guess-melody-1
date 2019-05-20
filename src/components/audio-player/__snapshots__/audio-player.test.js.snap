@@ -5,7 +5,7 @@ exports[`AudioPlayer is rendered correctly 1`] = `
   className="game__track"
 >
   <button
-    className="track__button track__button--play"
+    className="track__button track__button--pause"
     disabled={true}
     onClick={[Function]}
     type="button"
@@ -14,6 +14,17 @@ exports[`AudioPlayer is rendered correctly 1`] = `
     className="track__status"
   >
     <audio />
+    <div
+      className="track__progress"
+      style={
+        Object {
+          "background": "#707070",
+          "height": "2px",
+          "marginTop": "55px",
+          "width": "0%",
+        }
+      }
+    />
   </div>
 </div>
 `;

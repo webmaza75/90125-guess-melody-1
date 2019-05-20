@@ -25,6 +25,17 @@ exports[`ArtistQuestionScreen is rendered correctly 1`] = `
         className="track__status"
       >
         <audio />
+        <div
+          className="track__progress"
+          style={
+            Object {
+              "background": "#707070",
+              "height": "2px",
+              "marginTop": "55px",
+              "width": "0%",
+            }
+          }
+        />
       </div>
     </div>
   </div>

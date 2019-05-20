@@ -1,59 +1,98 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {isFunction} from 'util';
 
-class AudioPlayer extends PureComponent {
+class AudioPlayer extends Component {
   constructor(props) {
     super(props);
+    this._audioRef = React.createRef();
 
     this.state = {
       isLoading: true,
-      progress: null
+      isPlaying: props.isPlaying === true ? true : false,
+      progress: 0
     };
 
     this._handleButtonClick = this._handleButtonClick.bind(this);
   }
 
   _handleButtonClick() {
-    this.props.onPlayButtonClick();
+    const {onPlayButtonClick} = this.props;
+
+    if (onPlayButtonClick && isFunction(onPlayButtonClick)) {
+      this.props.onPlayButtonClick();
+    }
+    this.setState((prevState) => ({
+      isPlaying: !prevState.isPlaying
+    }));
   }
 
   componentDidMount() {
-    this._audio = new Audio(this.props.src);
+    const audio = this._audioRef.current;
 
-    this.setState({
-      progress: this._audio.currentTime
-    });
+    if (!audio) {
+      return;
+    }
 
-    this._audio.oncanplaythrough = () => this.setState({
+    audio.src = this.props.src;
+
+    audio.oncanplaythrough = () => this.setState({
       isLoading: false,
     });
 
-    this._audio.ontimeupdate = () => this.setState({
-      progress: this._audio.currentTime
+    audio.onplay = () => {
+      this.setState({
+        isPlaying: true,
+      });
+    };
+
+    audio.onpause = () => this.setState({
+      isPlaying: false,
     });
+
+    audio.ontimeupdate = () => {
+      const {currentTime, duration} = audio;
+      const currentProgress = Math.floor(currentTime * 100 / duration);
+
+      this.setState({
+        progress: currentProgress
+      });
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isPlaying !== undefined && nextProps.isPlaying !== prevState.isPlaying) {
+      return {
+        isPlaying: nextProps.isPlaying
+      };
+    }
+    return null;
   }
 
   componentDidUpdate() {
-    if (this.props.isPlaying) {
-      this._audio.play();
+    const audio = this._audioRef.current;
+    const {isPlaying} = this.state;
+
+    if (isPlaying) {
+      audio.play();
     } else {
-      this._audio.pause();
+      audio.pause();
     }
   }
 
   componentWillUnmount() {
-    this._audio.oncanplaythrough = null;
-    this._audio.currentTime = null;
-    this._audio.ontimeupdate = null;
-    this._audio.pause = null;
-    this._audio.play = null;
-    this._audio.src = ``;
-    this._audio = null;
+    const audio = this._audioRef.current;
+
+    audio.oncanplaythrough = null;
+    audio.currentTime = null;
+    audio.ontimeupdate = null;
+    audio.pause = null;
+    audio.play = null;
+    audio.src = ``;
   }
 
   render() {
-    const {isLoading} = this.state;
-    const {isPlaying} = this.props;
+    const {isLoading, isPlaying, progress} = this.state;
 
     return (<div className="game__track">
       <button
@@ -64,16 +103,24 @@ class AudioPlayer extends PureComponent {
       >
       </button>
       <div className="track__status">
-        <audio></audio>
+        <audio ref={this._audioRef}></audio>
+        <div
+          className="track__progress"
+          style={{
+            height: `2px`,
+            background: `#707070`,
+            marginTop: `55px`,
+            width: `${progress}%`,
+          }}/>
       </div>
     </div>);
   }
 }
 
 AudioPlayer.propTypes = {
-  isPlaying: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool,
   src: PropTypes.string.isRequired,
-  onPlayButtonClick: PropTypes.func.isRequired,
+  onPlayButtonClick: PropTypes.func,
 };
 
 export default AudioPlayer;

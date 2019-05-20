@@ -8,9 +8,6 @@ const questionType = [`genre`, `artist`];
 class ArtistQuestionScreen extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      activePlayer: -1
-    };
   }
 
   _handleChange(event) {
@@ -28,10 +25,6 @@ class ArtistQuestionScreen extends PureComponent {
       {<div className="track">
         <AudioPlayer
           src={song.src}
-          isPlaying={this.state.activePlayer !== -1}
-          onPlayButtonClick={() => this.setState({
-            activePlayer: this.state.activePlayer === 0 ? -1 : 0
-          })}
         />
       </div>}
 

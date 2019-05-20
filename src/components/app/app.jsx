@@ -62,7 +62,9 @@ class App extends Component {
   render() {
     const {questions} = this.props;
     const {question} = this.state;
-    const classNameType = question.type === QuestionType.ARTIST ? QuestionType.ARTIST : QuestionType.GENRE;
+    const classNameType = questions[question] && questions[question].type === QuestionType.ARTIST ?
+      QuestionType.ARTIST :
+      QuestionType.GENRE;
 
     return <section className={`game game--${classNameType}`}>
       <header className="game__header">

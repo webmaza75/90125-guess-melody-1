@@ -9,11 +9,10 @@ window.HTMLMediaElement.prototype.pause = () => {};
 
 it(`AudioPlayer is rendered correctly`, () => {
   const onPlayButtonClick = jest.fn();
-  const activePlayer = -1;
   const {answers} = question;
   const tree = renderer.create(<AudioPlayer
     src={answers[0].src}
-    isPlaying={activePlayer !== -1}
+    isPlaying={true}
     onPlayButtonClick={onPlayButtonClick}
   />).toJSON();
 
